@@ -1,18 +1,24 @@
+require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
 const fetch = require('node-fetch');
 
+const cdnBaseUrl = process.env.CDN_BASE_URL || './data/';
+const plpPrefix = process.env.PLP_PREFIX || 'page-';
+const plpDirectory = process.env.PLP_DIRECORY || 'plp/';
+const pdpPrefix = process.env.PDP_PREFIX || 'product-';
+const pdpDirectory = process.env.PDP_DIRECORY || 'pdp/';
+
 fastify.get('/item/:id(^\\d+)', async request => {
-  const data = await require(`../data/pdp/product-${request.params.id}.json`);
-  return data;
+  const data = await fetch(
+    `${cdnBaseUrl}${pdpDirectory}${pdpPrefix}${request.params.id}.json`,
+  );
+  return data.json();
 });
 
 fastify.get('/search/:page(^\\d+)', async request => {
-  const data = await require(`../data/plp/page-${request.params.page}.json`);
-  return data;
-});
-
-fastify.get('/test/:id(^\\d+)', async request => {
-  const data = await fetch(`https://jsonplaceholder.typicode.com/todos/${request.params.id}`);
+  const data = await fetch(
+    `${cdnBaseUrl}${plpDirectory}${plpPrefix}${request.params.page}.json`,
+  );
   return data.json();
 });
 
