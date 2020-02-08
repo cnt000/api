@@ -1,4 +1,5 @@
 const fastify = require('fastify')({ logger: true });
+const fetch = require('node-fetch');
 
 fastify.get('/item/:id(^\\d+)', async request => {
   const data = await require(`../data/pdp/product-${request.params.id}.json`);
@@ -8,6 +9,11 @@ fastify.get('/item/:id(^\\d+)', async request => {
 fastify.get('/search/:page(^\\d+)', async request => {
   const data = await require(`../data/plp/page-${request.params.page}.json`);
   return data;
+});
+
+fastify.get('/test/:id(^\\d+)', async request => {
+  const data = await fetch(`https://jsonplaceholder.typicode.com/todos/${request.params.id}`);
+  return data.json();
 });
 
 const start = async () => {
