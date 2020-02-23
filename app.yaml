@@ -1,6 +1,14 @@
-runtime: nodejs10
+runtime:  nodejs10
 
-instance_class: F2
+instance_class:  F2
 
 env_variables:
-  PORT: 8080
+  PORT:  8080
+  CDN_BASE_URL: https: //storage.cloud.google.com/pungilandia-items/
+  PLP_PREFIX: page-
+  PDP_PREFIX: product-
+
+  PLP_DIRECORY: plp/
+  PDP_DIRECORY: pdp/
+  IMG_DIRECORY: img/
+  BUCKET_NAME: pungilandia-items
