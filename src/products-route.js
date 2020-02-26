@@ -27,7 +27,7 @@ async function routes(fastify) {
             reply
               .code(200)
               .header('Content-Type', 'application/json; charset=utf-8')
-              .send(content);
+              .send(JSON.parse(content));
           });
       })
       .catch(() =>
@@ -57,7 +57,7 @@ async function routes(fastify) {
             reply
               .code(200)
               .header('Content-Type', 'application/json; charset=utf-8')
-              .send(content);
+              .send(JSON.parse(content));
           });
       })
       .catch(() =>
