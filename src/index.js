@@ -1,7 +1,15 @@
+const path = require('path');
 require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
 
 fastify.register(require('./products-route'));
+
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, '..', '..', 'app', 'build')
+});
+fastify.get('/', function(req, reply) {
+  reply.sendFile('index.html'); // serving path.join(__dirname, 'public', 'myHtml.html') directly
+});
 
 const start = async () => {
   try {
