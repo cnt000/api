@@ -5,10 +5,10 @@ const fastify = require('fastify')({ logger: true })
 fastify.register(require('./products-route'))
 
 fastify.register(require('fastify-static'), {
-  root: path.join(__dirname)
+  root: path.join(__dirname, '..', '..', 'app', 'build')
 })
 fastify.get('/', function(req, reply) {
-  reply.sendFile('test.html')
+  reply.sendFile('index.html')
 })
 
 const start = async () => {
