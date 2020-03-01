@@ -5,7 +5,7 @@ const fastify = require('fastify')({ logger: true })
 fastify.register(require('./products-route'))
 
 fastify.register(require('fastify-static'), {
-  root: path.join(__dirname, '..', '..', 'app', 'build')
+  root: path.join(__dirname, '..', 'build')
 })
 fastify.get('/', function(req, reply) {
   reply.sendFile('index.html')
