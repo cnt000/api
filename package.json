@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "createEnv": "node src/scripts/writeEnv.js",
-    "start": "npm run createEnv && node src/index.js"
+    "start": "node src/index.js"
   },
   "author": "Edoardo Gargano cnt000",
   "license": "ISC",
