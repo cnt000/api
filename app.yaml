@@ -11,3 +11,4 @@ env_variables:
   PDP_DIRECORY: pdp/
   IMG_DIRECORY: img/
   BUCKET_NAME: pungilandia-items
+  GOOGLE_APPLICATION_CREDENTIALS: ./pungilandia2020-bbf37e9b6ed5.json
