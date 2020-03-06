@@ -19,5 +19,8 @@
     "jest": "^24.9.0",
     "js-yaml": "^3.13.1",
     "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "prettier": "1.19.1"
   }
 }

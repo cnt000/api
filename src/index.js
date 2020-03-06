@@ -1,13 +1,12 @@
 require('dotenv').config()
 const fastify = require('fastify')({ logger: true })
 
-fastify.register(require('./products-route'))
+const buildFastify = async () => {
+  fastify.register(require('./products-route'))
+  fastify.register(require('fastify-cors'), {
+    origin: '*',
+  })
 
-fastify.register(require('fastify-cors'), {
-  origin: '*'
-})
-
-const start = async () => {
   try {
     await fastify.listen(process.env.PORT || 8080)
     fastify.log.info(`server listening on ${fastify.server.address().port}`)
@@ -17,4 +16,6 @@ const start = async () => {
   }
 }
 
-start()
+buildFastify()
+
+module.exports = buildFastify
