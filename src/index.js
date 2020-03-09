@@ -1,12 +1,24 @@
 require('dotenv').config()
-const fastify = require('fastify')({ logger: true })
+const fastify = require('fastify')({
+  logger: true,
+  // http2: true,
+  // https: {
+  //   key: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.key')),
+  //   cert: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.cert')),
+  // },
+})
 
-const buildFastify = async () => {
-  fastify.register(require('./products-route'))
-  fastify.register(require('fastify-cors'), {
+fastify.register(
+  require('./routes/products-route'),
+  { prefix: '/api/v1' },
+  require('fastify-cors'),
+  {
     origin: '*',
-  })
+  },
+  require('fastify-helmet')
+)
 
+const start = async () => {
   try {
     await fastify.listen(process.env.PORT || 8080)
     fastify.log.info(`server listening on ${fastify.server.address().port}`)
@@ -16,6 +28,13 @@ const buildFastify = async () => {
   }
 }
 
-buildFastify()
+process.on('SIGINT', async () => {
+  fastify.log.info('stopping fastify server')
+  await fastify.close()
+  fastify.log.info('fastify server stopped')
+  process.exit(0)
+})
 
-module.exports = buildFastify
+start()
+
+module.exports = fastify
