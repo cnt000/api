@@ -1,6 +1,7 @@
 const { Storage } = require('@google-cloud/storage')
 const storage = new Storage()
 const bucket = storage.bucket(process.env.BUCKET_NAME)
+const { replyOk, replyNotFound } = require('../replies/reply')
 
 const plpPrefix = process.env.PLP_PREFIX || 'page-'
 const plpDirectory = process.env.PLP_DIRECORY || 'plp/'
@@ -52,19 +53,5 @@ async function routes(fastify) {
     }
   })
 }
-
-const replyOk = (reply, content) => {
-  reply
-    .code(200)
-    .type('application/json')
-    .header('Content-Type', 'application/json charset=utf-8')
-    .send(JSON.parse(content))
-}
-
-const replyNotFound = reply =>
-  reply
-    .code(404)
-    .header('Content-Type', 'application/json charset=utf-8')
-    .send({ message: 'not found' })
 
 module.exports = routes
