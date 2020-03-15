@@ -8,15 +8,11 @@ const fastify = require('fastify')({
   // },
 })
 
-fastify.register(
-  require('./routes/products-route'),
-  { prefix: '/api/v1' },
-  require('fastify-cors'),
-  {
-    origin: '*',
-  },
-  require('fastify-helmet')
-)
+fastify.register(require('./routes/products-route'), { prefix: '/api/v1' })
+fastify.register(require('fastify-cors'), {
+  origin: '*',
+})
+fastify.register(require('fastify-helmet'))
 
 const start = async () => {
   try {
