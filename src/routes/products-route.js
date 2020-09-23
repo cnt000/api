@@ -1,11 +1,5 @@
 const { Storage } = require('@google-cloud/storage')
-const GOOGLE_CLOUD_PROJECT_ID = 'pungilandia-gcs';
-const GOOGLE_CLOUD_KEYFILE = './pungilandia-gcs-0d178b593aff.json';
-
-const storage = new Storage({
-  projectId: GOOGLE_CLOUD_PROJECT_ID,
-  keyFilename: GOOGLE_CLOUD_KEYFILE,
-});
+const storage = new Storage();
 
 const bucket = storage.bucket(process.env.BUCKET_NAME)
 const { replyOk, replyNotFound } = require('../replies/reply')

@@ -10,4 +10,4 @@ env_variables:
   PLP_DIRECORY: plp/
   PDP_DIRECORY: pdp/
   IMG_DIRECORY: img/
-  BUCKET_NAME: pungilandia-items
+  BUCKET_NAME: pungi-assets
