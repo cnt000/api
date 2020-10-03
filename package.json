@@ -17,8 +17,9 @@
     "fastify": "^2.15.3",
     "fastify-cors": "^3.0.3",
     "fastify-helmet": "^3.0.2",
+    "firebase-admin": "^9.2.0",
     "js-yaml": "^3.14.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "prettier": "1.19.1",

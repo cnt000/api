@@ -3,7 +3,7 @@ const replyOk = (reply, content) =>
     .code(200)
     .type('application/json')
     .header('Content-Type', 'application/json charset=utf-8')
-    .send(JSON.parse(content))
+    .send(content)
 
 const replyNotFound = reply =>
   reply

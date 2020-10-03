@@ -1,5 +1,6 @@
 const { Storage } = require('@google-cloud/storage')
-const storage = new Storage();
+const { ReadItem, ReadItems } = require('../db/Read')
+const storage = new Storage()
 
 const bucket = storage.bucket(process.env.BUCKET_NAME)
 const { replyOk, replyNotFound } = require('../replies/reply')
@@ -11,51 +12,29 @@ const pdpDirectory = process.env.PDP_DIRECORY || 'pdp/'
 
 async function routes(fastify) {
   fastify.get('/item/:id(^\\d+$)', async (request, reply) => {
-    const fileName = `${pdpDirectory}${pdpPrefix}${request.params.id}.json`
-    const file = bucket.file(fileName)
-    let content = ''
-    const data = await file.get()
+    const product = await ReadItem(request.params.id)
     try {
-      data[0]
-        .createReadStream()
-        .on('error', err => {
-          return Promise.reject(err)
-        })
-        .on('data', data => {
-          content += data
-        })
-        .on('end', () => {
-          replyOk(reply, content)
-        })
+      replyOk(reply, product)
     } catch (e) {
       replyNotFound(reply)
     }
   })
 
   fastify.get('/search/:page(^\\d+$)', async (request, reply) => {
-    const fileName = `${plpDirectory}${plpPrefix}${request.params.page}.json`
-    const file = bucket.file(fileName)
-    let content = ''
-    const data = await file.get()
     try {
-      data[0]
-        .createReadStream()
-        .on('error', err => {
-          return Promise.reject(err)
-        })
-        .on('data', data => {
-          content += data
-        })
-        .on('end', () => {
-          replyOk(reply, content)
-        })
+      const snapshot = await ReadItems(request.params.page)
+      const products = [];
+      snapshot.forEach(doc => {
+        products.push(doc.data())
+      })
+      replyOk(reply, products)
     } catch (e) {
       replyNotFound(reply)
     }
   })
 
   fastify.get('/search', async (request, reply) => {
-    const query = request.query.q;
+    const query = request.query.q
     const fileName = `${plpDirectory}${plpPrefix}0.json`
     const file = bucket.file(fileName)
     let content = ''
@@ -72,7 +51,7 @@ async function routes(fastify) {
         .on('end', () => {
           const products = JSON.parse(content)
           const regex = new RegExp(query, 'ig')
-          const filtered = products.filter(({name}) => regex.test(name))
+          const filtered = products.filter(({ name }) => regex.test(name))
           reply
             .code(200)
             .type('application/json')

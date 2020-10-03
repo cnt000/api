@@ -5,4 +5,5 @@ data
 TODO.md
 .vscode/launch.json
 build
-pungilandia-gcs-0d178b593aff.json
+pungilandia-gcs-0*
+pungilandia-firebase-firebase-*
