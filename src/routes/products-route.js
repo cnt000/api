@@ -22,7 +22,7 @@ async function routes(fastify) {
 
   fastify.get('/search/:page(^\\d+$)', async (request, reply) => {
     try {
-      const snapshot = await ReadItems(request.params.page)
+      const snapshot = await ReadItems(Number(request.params.page))
       const products = [];
       snapshot.forEach(doc => {
         products.push(doc.data())
