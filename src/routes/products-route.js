@@ -20,10 +20,12 @@ async function routes(fastify) {
     }
   })
 
-  fastify.get('/search/:page(^\\d+$)', async (request, reply) => {
+  fastify.get('/search/:page(^\\d+$)/:ppp(^\\d+$)', async (request, reply) => {
+    const page = Number(request.params.page)
+    const ppp = Math.min(Number(request.params.ppp), 48)
     try {
-      const snapshot = await ReadItems(Number(request.params.page))
-      const products = [];
+      const snapshot = await ReadItems(page, ppp)
+      const products = []
       snapshot.forEach(doc => {
         products.push(doc.data())
       })

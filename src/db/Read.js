@@ -16,12 +16,12 @@ const ReadItem = async id => {
   }
 }
 
-const ReadItems = async page => {
+const ReadItems = async (page, ppp) => {
   try {
     const products = await Firestore.db.collection('products').orderBy('name')
     const snapshot = await products
-      .limit(24)
-      .offset(page * 24)
+      .limit(ppp)
+      .offset(page * ppp)
       .get()
     if (snapshot.empty) {
       console.log('No matching documents.')
