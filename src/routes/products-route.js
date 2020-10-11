@@ -11,6 +11,14 @@ const pdpPrefix = process.env.PDP_PREFIX || 'product-'
 const pdpDirectory = process.env.PDP_DIRECORY || 'pdp/'
 
 async function routes(fastify) {
+  fastify.get('/', async (request, reply) => {
+    try {
+      replyOk(reply, { message: 'it works' })
+    } catch (e) {
+      replyNotFound(reply)
+    }
+  })
+
   fastify.get('/item/:id(^\\d+$)', async (request, reply) => {
     const product = await ReadItem(request.params.id)
     try {
