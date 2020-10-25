@@ -1,14 +1,7 @@
-const { Storage } = require('@google-cloud/storage')
+const algoliasearch = require('algoliasearch/lite')
 const { ReadItem, ReadItems } = require('../db/Read')
-const storage = new Storage()
 
-const bucket = storage.bucket(process.env.BUCKET_NAME)
 const { replyOk, replyNotFound } = require('../replies/reply')
-
-const plpPrefix = process.env.PLP_PREFIX || 'page-'
-const plpDirectory = process.env.PLP_DIRECORY || 'plp/'
-const pdpPrefix = process.env.PDP_PREFIX || 'product-'
-const pdpDirectory = process.env.PDP_DIRECORY || 'pdp/'
 
 async function routes(fastify) {
   fastify.get('/', async (request, reply) => {
@@ -29,8 +22,34 @@ async function routes(fastify) {
   })
 
   fastify.get('/search/:page(^\\d+$)/:ppp(^\\d+$)', async (request, reply) => {
+    const query = request.query.q
     const page = Number(request.params.page)
     const ppp = Math.min(Number(request.params.ppp), 48)
+    if (query) {
+      try {
+            const client = algoliasearch(
+              process.env.ALGOLIA_APP_ID,
+              process.env.ALGOLIA_SEARCH_API_KEY
+            )
+            const index = client.initIndex('products')
+            const { hits } = await index.search(query, {
+              attributesToRetrieve: [
+                'name',
+                'size',
+                'price',
+                'image',
+                'addToCartLink',
+              ],
+              hitsPerPage: 24,
+            })
+
+            replyOk(reply, hits)
+            return
+          } catch (e) {
+        replyNotFound(reply)
+        return
+      }
+    }
     try {
       const snapshot = await ReadItems(page, ppp)
       const products = []
@@ -43,37 +62,43 @@ async function routes(fastify) {
     }
   })
 
-  fastify.get('/search', async (request, reply) => {
-    const query = request.query.q
-    const fileName = `${plpDirectory}${plpPrefix}0.json`
-    const file = bucket.file(fileName)
-    let content = ''
-    const data = await file.get()
-    try {
-      data[0]
-        .createReadStream()
-        .on('error', err => {
-          return Promise.reject(err)
+  /*fastify.get(
+    '/search/:page(^\\d+$)/:ppp(^\\d+$)',
+    async (request, reply) => {
+      const query = request.query.q
+
+      try {
+        const client = algoliasearch(
+          process.env.ALGOLIA_APP_ID,
+          process.env.ALGOLIA_SEARCH_API_KEY
+        )
+        const index = client.initIndex('products')
+        const { hits } = await index.search('agave', {
+          attributesToRetrieve: [
+            'name',
+            'size',
+            'price',
+            'image',
+            'addToCartLink',
+          ],
+          hitsPerPage: 24,
         })
-        .on('data', data => {
-          content += data
-        })
-        .on('end', () => {
-          const products = JSON.parse(content)
-          const regex = new RegExp(query, 'ig')
-          const filtered = products.filter(({ name }) => regex.test(name))
-          reply
-            .code(200)
-            .type('application/json')
-            .header('Content-Type', 'application/json charset=utf-8')
-            .send(filtered)
-          // replyOk(reply, products.toString())
-          // TODO
-        })
-    } catch (e) {
-      replyNotFound(reply)
+        // .then(({ hits }) => {
+        //   console.log(hits)
+        // })
+
+        reply
+          .code(200)
+          .type('application/json')
+          .header('Content-Type', 'application/json charset=utf-8')
+          .send(hits)
+        // TODO
+        // replyOk(reply, products.toString())
+      } catch (e) {
+        replyNotFound(reply)
+      }
     }
-  })
+  )*/
 }
 
 module.exports = routes

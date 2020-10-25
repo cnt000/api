@@ -6,8 +6,8 @@ steps:
   entrypoint: npm
   args: ["run", "create-env"]
   env:
-    - 'MY_SECRET_KEY=${_MY_SECRET_KEY}'
-    - 'GOOGLE_APPLICATION_CREDENTIALS=${_GOOGLE_APPLICATION_CREDENTIALS}'
+    - 'ALGOLIA_APP_ID=${_ALGOLIA_APP_ID}'
+    - 'ALGOLIA_SEARCH_API_KEY=${_ALGOLIA_SEARCH_API_KEY}'
 - name: "gcr.io/cloud-builders/gcloud"
   args: ["app", "deploy"]
 timeout: "1600s"
