@@ -27,26 +27,26 @@ async function routes(fastify) {
     const ppp = Math.min(Number(request.params.ppp), 48)
     if (query) {
       try {
-            const client = algoliasearch(
-              process.env.ALGOLIA_APP_ID,
-              process.env.ALGOLIA_SEARCH_API_KEY
-            )
-            const index = client.initIndex('products')
-            const { hits } = await index.search(query, {
-              attributesToRetrieve: [
-                'name',
-                'size',
-                'price',
-                'image',
-                'addToCartLink',
-              ],
-              hitsPerPage: 24,
-            })
-
-            replyOk(reply, hits)
-            return
-          } catch (e) {
-        replyNotFound(reply)
+        const client = algoliasearch(
+          process.env.ALGOLIA_APP_ID,
+          process.env.ALGOLIA_SEARCH_API_KEY
+        )
+        const index = client.initIndex('products')
+        const { hits } = await index.search(query, {
+          attributesToRetrieve: [
+            'name',
+            'size',
+            'price',
+            'image',
+            'addToCartLink',
+          ],
+          hitsPerPage: ppp,
+        })
+        replyOk(reply, hits)
+        return
+      } catch (e) {
+        console.error(e)
+        replyNotFound(reply, e)
         return
       }
     }

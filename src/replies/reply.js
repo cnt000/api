@@ -5,12 +5,12 @@ const replyOk = (reply, content) =>
     .header('Content-Type', 'application/json charset=utf-8')
     .send(content)
 
-const replyNotFound = reply =>
+const replyNotFound = (reply, error) =>
   reply
     .code(404)
     .type('application/json')
     .header('Content-Type', 'application/json charset=utf-8')
-    .send({ message: 'not found' })
+    .send({ message: 'not found', error })
 
 module.exports = {
   replyOk,
