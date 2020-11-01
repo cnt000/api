@@ -11,5 +11,3 @@ env_variables:
   PDP_DIRECORY: pdp/
   IMG_DIRECORY: img/
   BUCKET_NAME: pungi-assets
-  ALGOLIA_APP_ID: 0
-  ALGOLIA_SEARCH_API_KEY: 0

@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "Api for plp and pdf",
+  "description": "Api for products",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
