@@ -46,7 +46,6 @@ async function routes(fastify) {
         return
       } catch (e) {
         console.error({ severity: 'NOTICE', ...e })
-        console.error(process.env.ALGOLIA_APP_ID)
         replyNotFound(reply, e)
         return
       }
