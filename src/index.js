@@ -8,6 +8,7 @@ const fastify = require('fastify')({
   // },
 })
 
+fastify.register(require('./routes/base-route'))
 fastify.register(require('./routes/products-route'), { prefix: '/api/v1' })
 fastify.register(require('fastify-cors'), {
   origin: '*',
