@@ -6,7 +6,11 @@ const { replyOk, replyNotFound } = require('../replies/reply')
 async function routes(fastify) {
   fastify.get('/', async (request, reply) => {
     try {
-      replyOk(reply, { message: 'it works' })
+      const { address, port, family } = fastify.server.address();
+      replyOk(reply, {
+        message:
+          `API for Pungilandia products, visit ${address}:${port} (${family})`,
+      })
     } catch (e) {
       replyNotFound(reply)
     }
@@ -16,6 +20,19 @@ async function routes(fastify) {
     const product = await ReadItem(request.params.id)
     try {
       replyOk(reply, product)
+    } catch (e) {
+      replyNotFound(reply)
+    }
+  })
+
+  fastify.get('/total-pages', async (request, reply) => {
+    try {
+      const snapshot = await ReadItems(0, 1000)
+      const products = []
+      snapshot.forEach(doc => {
+        products.push(1)
+      })
+      replyOk(reply, products.length)
     } catch (e) {
       replyNotFound(reply)
     }
@@ -32,7 +49,7 @@ async function routes(fastify) {
           process.env.ALGOLIA_SEARCH_API_KEY
         )
         const index = client.initIndex('products')
-        const { hits } = await index.search(query, {
+        const { hits } = await index.index.search(query, {
           attributesToRetrieve: [
             'name',
             'size',
@@ -61,44 +78,6 @@ async function routes(fastify) {
       replyNotFound(reply)
     }
   })
-
-  /*fastify.get(
-    '/search/:page(^\\d+$)/:ppp(^\\d+$)',
-    async (request, reply) => {
-      const query = request.query.q
-
-      try {
-        const client = algoliasearch(
-          process.env.ALGOLIA_APP_ID,
-          process.env.ALGOLIA_SEARCH_API_KEY
-        )
-        const index = client.initIndex('products')
-        const { hits } = await index.search('agave', {
-          attributesToRetrieve: [
-            'name',
-            'size',
-            'price',
-            'image',
-            'addToCartLink',
-          ],
-          hitsPerPage: 24,
-        })
-        // .then(({ hits }) => {
-        //   console.log(hits)
-        // })
-
-        reply
-          .code(200)
-          .type('application/json')
-          .header('Content-Type', 'application/json charset=utf-8')
-          .send(hits)
-        // TODO
-        // replyOk(reply, products.toString())
-      } catch (e) {
-        replyNotFound(reply)
-      }
-    }
-  )*/
 }
 
 module.exports = routes

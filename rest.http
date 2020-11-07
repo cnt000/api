@@ -1,0 +1,35 @@
+# LOCAL:
+
+#### item
+
+http://127.0.0.1:8080/api/v1/item/1015
+
+#### search
+
+http://127.0.0.1:8080/api/v1/search/10/10
+
+### search with query
+
+http://127.0.0.1:8080/api/v1/search/10/10?q=agave
+
+#### total-pages
+
+http://127.0.0.1:8080/api/v1/total-pages
+
+# PROD:
+
+#### item
+
+http://pungilandia2020-api.appspot.com/api/v1/item/1015
+
+#### search
+
+http://pungilandia2020-api.appspot.com/api/v1/search/10/10
+
+### search with query
+
+http://pungilandia2020-api.appspot.com/api/v1/search/10/10?q=agave
+
+#### total-pages
+
+http://pungilandia2020-api.appspot.com/api/v1/total-pages
