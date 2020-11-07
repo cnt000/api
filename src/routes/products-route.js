@@ -57,6 +57,7 @@ async function routes(fastify) {
             'addToCartLink',
           ],
           hitsPerPage: ppp,
+          page: page,
         })
         replyOk(reply, hits)
         return
