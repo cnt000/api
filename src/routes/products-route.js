@@ -48,7 +48,7 @@ async function routes(fastify) {
           process.env.ALGOLIA_SEARCH_API_KEY
         )
         const index = client.initIndex('products')
-        const { hits } = await index.index.search(query, {
+        const { hits } = await index.search(query, {
           attributesToRetrieve: [
             'name',
             'size',
