@@ -23,7 +23,7 @@ async function routes(fastify) {
     }
   })
 
-  fastify.get('/total-pages', async (request, reply) => {
+  fastify.get('/total-products', async (request, reply) => {
     try {
       const query = request.query.q
       let results = [];
