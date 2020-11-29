@@ -1,4 +1,5 @@
 const Firestore = require('./Firestore')
+const algoliasearch = require('algoliasearch/lite')
 
 const ReadItem = async id => {
   try {
@@ -33,4 +34,22 @@ const ReadItems = async (page, ppp) => {
   }
 }
 
-module.exports = { ReadItem, ReadItems }
+const ReadItemsAlgolia = async (indexName, query, page, ppp) => {
+  try {
+    const client = algoliasearch(
+      process.env.ALGOLIA_APP_ID,
+      process.env.ALGOLIA_SEARCH_API_KEY
+    )
+    const index = client.initIndex(indexName)
+    const { hits } = await index.search(query, {
+      attributesToRetrieve: ['name', 'size', 'price', 'image', 'addToCartLink'],
+      hitsPerPage: ppp,
+      page: page,
+    })
+    return hits
+  } catch (e) {
+    throw Error(e)
+  }
+}
+
+module.exports = { ReadItem, ReadItems, ReadItemsAlgolia }

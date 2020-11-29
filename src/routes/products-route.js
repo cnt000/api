@@ -1,5 +1,4 @@
-const algoliasearch = require('algoliasearch/lite')
-const { ReadItem, ReadItems } = require('../db/Read')
+const { ReadItem, ReadItems, ReadItemsAlgolia } = require('../db/Read')
 
 const { replyOk, replyNotFound } = require('../replies/reply')
 
@@ -26,12 +25,17 @@ async function routes(fastify) {
 
   fastify.get('/total-pages', async (request, reply) => {
     try {
-      const snapshot = await ReadItems(0, 1000)
-      const products = []
-      snapshot.forEach(doc => {
-        products.push(1)
-      })
-      replyOk(reply, products.length)
+      const query = request.query.q
+      let results = [];
+      if(query) {
+        results = await ReadItemsAlgolia('products', query, 0, 1000)
+      } else {
+        const snapshot = await ReadItems(0, 1000)
+        snapshot.forEach(doc => {
+          results.push(1)
+        })
+      }
+      replyOk(reply, results.length)
     } catch (e) {
       replyNotFound(reply)
     }
@@ -43,22 +47,7 @@ async function routes(fastify) {
     const ppp = Math.min(Number(request.params.ppp), 48)
     if (query) {
       try {
-        const client = algoliasearch(
-          process.env.ALGOLIA_APP_ID,
-          process.env.ALGOLIA_SEARCH_API_KEY
-        )
-        const index = client.initIndex('products')
-        const { hits } = await index.search(query, {
-          attributesToRetrieve: [
-            'name',
-            'size',
-            'price',
-            'image',
-            'addToCartLink',
-          ],
-          hitsPerPage: ppp,
-          page: page,
-        })
+        const hits = await ReadItemsAlgolia('products', query, page, ppp)
         replyOk(reply, hits)
         return
       } catch (e) {
